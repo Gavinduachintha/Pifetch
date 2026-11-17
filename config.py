@@ -1,0 +1,9 @@
+# config.py
+
+GREEN = "\033[38;2;79;218;142m"
+ORANGE = "\033[38;2;230;154;67m"
+WHITE = "\033[97m"
+GRAY = "\033[90m"
+RESET = "\033[0m"
+
+SEPARATOR = "  "
