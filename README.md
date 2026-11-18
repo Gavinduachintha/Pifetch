@@ -14,41 +14,43 @@
 
 ## Overview
 
-Pifetch is a lightweight terminal information tool inspired by the familiar `fetch` family of utilities. It is designed for Raspberry Pi workstations, servers, and lab machines where a quick view of the current system is useful.
+Pifetch is a lightweight terminal information tool inspired by the familiar `fetch` family of utilities. It is designed for Raspberry Pi workstations, servers, and Linux lab machines where a quick overview of the current system is useful.
 
 The output combines:
 
-- A Raspberry Pi-themed ASCII logo
+- A custom Raspberry Pi-themed ASCII logo
 - Hardware and kernel information
 - CPU frequency, temperature, and load
 - Memory and disk usage
 - Network interfaces and IPv4 addresses
 - A color-coded, readable terminal layout
 
-Pifetch uses Python's standard library only, so there is no package installation step and no virtual environment required.
+Pifetch uses Python's standard library only. No third-party packages, installation dependencies, or virtual environments are required.
 
 ## Preview
 
-```text
-       .-------.  USER        │ pi
-      /  .---.  \  HOST        │ raspberrypi
-     |  /     \  |  MODEL       │ Raspberry Pi 5 Model B Rev 1.0
-     | |  PI5 |  |  OS          │ Debian GNU/Linux 12 (bookworm)
-     |  \     /  |  KERNEL      │ 6.6.31+rpt-rpi-2712
-      \  '---'  /  ARCH        │ aarch64
-       '-------'  SHELL       │ /bin/bash
-          | |     UPTIME      │ 2d 4h 18m
-       ___| |___  CPU         │ ARM ...
-                    CPU FREQ    │ 2400 MHz
-                    CPU TEMP    │ 43.2 °C
-                    LOAD        │ 0.18
-                    MEMORY      │ 812 MiB / 4096 MiB
-                    DISK        │ 8.1 GB / 59.6 GB
-                    INTERFACES  │ eth0, wlan0
-                    IP ADDRESS  │ eth0: 192.168.1.20/24
+Pifetch displays the ASCII logo and system information side by side in a compact terminal dashboard.
 
-● RASPBERRY PI ENGINEERING WORKSTATION
+```text
+██████╗ ██╗███████╗███████╗████████╗     USER        │ pi
+██╔══██╗██║██╔════╝██╔════╝╚══██╔══╝     HOST        │ raspberrypi
+██████╔╝██║█████╗  █████╗     ██║        MODEL       │ Raspberry Pi 5 Model B Rev 1.0
+██╔═══╝ ██║██╔══╝  ██╔══╝     ██║        OS          │ Debian GNU/Linux 12 (bookworm)
+██║     ██║██║     ███████╗   ██║        KERNEL      │ 6.6.31+rpt-rpi-2712
+╚═╝     ╚═╝╚═╝     ╚══════╝   ╚═╝        ARCH        │ aarch64
+                                         SHELL       │ /bin/bash
+┌───────────────────────┐                UPTIME      │ 2d 4h 18m
+│  PI 5 // SYSTEM READY │                CPU         │ ARM ...
+│  [██████████] 100%    │                CPU FREQ    │ 2400 MHz
+└───────────────────────┘                CPU TEMP    │ 43.2 °C
+                                         LOAD        │ 0.18
+> initializing pifetch...                MEMORY      │ 812 MiB / 4096 MiB
+> access granted_                        DISK        │ 8.1 GB / 59.6 GB
+                                         INTERFACES  │ eth0, wlan0
+                                         IP ADDRESS  │ eth0: 192.168.1.20/24
 ```
+
+*Example output from a Raspberry Pi 5. Hardware values and system details vary depending on the machine.*
 
 ## Requirements
 
@@ -57,7 +59,9 @@ Pifetch uses Python's standard library only, so there is no package installation
 - A terminal with ANSI color support for the default colored output
 - The `ip` command for IPv4 address discovery
 
-Pifetch reads standard Linux interfaces such as `/proc`, `/sys`, and `/etc/os-release`. Some values are reported as `Unknown` or `Unavailable` when the underlying interface is missing, such as when the program is run on a non-Raspberry Pi machine.
+Pifetch reads standard Linux interfaces such as `/proc`, `/sys`, and `/etc/os-release`.
+
+Some hardware-specific values may be reported as `Unknown` or `Unavailable` when the underlying interface is missing, such as when running on a non-Raspberry Pi machine.
 
 ## Installation
 
@@ -70,15 +74,29 @@ cd Pifetch
 
 No third-party dependencies are required.
 
-For a convenient command available from anywhere, create a symlink:
+### Optional: Run Pifetch from anywhere
+
+Create a local binary directory if it does not already exist:
 
 ```bash
 mkdir -p "$HOME/.local/bin"
+```
+
+Create a symbolic link:
+
+```bash
 ln -s "$(pwd)/pifetch.py" "$HOME/.local/bin/pifetch"
+```
+
+Make the script executable:
+
+```bash
 chmod +x pifetch.py
 ```
 
-Make sure `"$HOME/.local/bin"` is in your `PATH`, then run:
+Ensure `"$HOME/.local/bin"` is included in your `PATH`.
+
+Run Pifetch:
 
 ```bash
 pifetch
@@ -86,25 +104,27 @@ pifetch
 
 ## Usage
 
-Run the script directly from the repository:
+### Run directly
 
 ```bash
 python3 pifetch.py
 ```
 
-Disable ANSI colors when redirecting output, using a minimal terminal, or collecting plain text:
+### Disable ANSI colors
+
+Useful when redirecting output, using a minimal terminal, or collecting plain-text information.
 
 ```bash
 python3 pifetch.py --no-color
 ```
 
-Save a plain-text report:
+### Save a system report
 
 ```bash
 python3 pifetch.py --no-color > system-report.txt
 ```
 
-Display command-line help:
+### Display command-line help
 
 ```bash
 python3 pifetch.py --help
@@ -112,12 +132,12 @@ python3 pifetch.py --help
 
 ## Information displayed
 
-| Field | Source or meaning |
+| Field | Description |
 | --- | --- |
 | `USER` | Current `USER` environment variable |
 | `HOST` | System hostname |
 | `MODEL` | Raspberry Pi model from `/proc/device-tree/model` |
-| `OS` | Pretty Linux distribution name from `/etc/os-release` |
+| `OS` | Distribution name from `/etc/os-release` |
 | `KERNEL` | Running kernel release |
 | `ARCH` | Machine architecture |
 | `SHELL` | Current `SHELL` environment variable |
@@ -125,10 +145,10 @@ python3 pifetch.py --help
 | `CPU` | Processor description from `/proc/cpuinfo` |
 | `CPU FREQ` | Current frequency of CPU 0, when available |
 | `CPU TEMP` | Thermal zone 0 temperature, when available |
-| `LOAD` | One-minute load average |
+| `LOAD` | One-minute system load average |
 | `MEMORY` | Used and total memory from `/proc/meminfo` |
 | `DISK` | Used and total space for the root filesystem |
-| `INTERFACES` | Network interfaces other than loopback |
+| `INTERFACES` | Network interfaces excluding loopback |
 | `IP ADDRESS` | IPv4 addresses reported by `ip -o -4 addr show` |
 
 ## Project structure
@@ -142,23 +162,37 @@ Pifetch/
 └── README.md        # Project documentation
 ```
 
-The code is intentionally split into presentation and collection layers: `system_info.py` gathers values, while `pifetch.py` formats them for the terminal. This keeps the collectors easy to extend without changing the display loop.
+The code is intentionally separated into collection and presentation layers.
+
+- `system_info.py` gathers system information.
+- `logo.py` contains the ASCII artwork.
+- `config.py` defines terminal colors.
+- `pifetch.py` handles command-line arguments and formats the output.
+
+This separation makes it easier to extend system information collectors without modifying the terminal display logic.
 
 ## Design notes
 
-- **No external dependencies:** only Python's standard library is used.
-- **Safe fallbacks:** unavailable hardware-specific values are displayed as `Unknown` or `Unavailable` instead of stopping the report.
-- **Readable output:** labels, separators, and values use distinct colors, with `--no-color` available for automation.
+- **Dependency-free:** Uses Python's standard library only.
+- **Lightweight:** Reads information directly from Linux system interfaces.
+- **Safe fallbacks:** Missing hardware-specific information is displayed as `Unknown` or `Unavailable`.
+- **Readable output:** Uses distinct colors for labels, separators, and values.
+- **Plain-text support:** Provides a `--no-color` option for automation and redirected output.
+- **Modular structure:** Separates system information collection from terminal presentation.
 
 ## Troubleshooting
 
 ### The model or temperature is unavailable
 
-This is expected on many non-Raspberry Pi systems and in containers. Pifetch depends on Raspberry Pi/Linux kernel interfaces that may not be mounted or exposed in those environments.
+This can happen on non-Raspberry Pi systems or inside containers.
+
+Pifetch depends on Linux kernel interfaces that may not be mounted or exposed in those environments.
 
 ### IP addresses are unavailable
 
-Install the package that provides the `ip` command for your distribution. On Debian-based systems:
+Make sure the package providing the `ip` command is installed.
+
+On Debian-based systems:
 
 ```bash
 sudo apt update
@@ -167,30 +201,55 @@ sudo apt install iproute2
 
 ### Colors look incorrect
 
-Use the plain-output mode:
+Try running Pifetch without ANSI colors:
 
 ```bash
 python3 pifetch.py --no-color
 ```
 
+### The `pifetch` command is not found
+
+Ensure that `$HOME/.local/bin` is included in your `PATH`.
+
+For Bash, add the following line to `~/.bashrc`:
+
+```bash
+export PATH="$HOME/.local/bin:$PATH"
+```
+
+Reload the configuration:
+
+```bash
+source ~/.bashrc
+```
+
 ## Contributing
 
-Contributions are welcome. A good contribution should:
+Contributions are welcome.
 
-1. Keep the standard-library-only approach unless there is a strong reason to change it.
-2. Preserve the existing output style and `--no-color` behavior.
-3. Handle missing Linux files or commands with a clear fallback.
-4. Keep collectors in `system_info.py` and presentation logic in `pifetch.py`.
-5. Run a syntax check before opening a pull request:
+A good contribution should:
 
-   ```bash
-   python3 -m py_compile pifetch.py config.py logo.py system_info.py
-   ```
+1. Preserve the standard-library-only approach unless there is a strong reason to change it.
+2. Maintain the existing terminal output style and `--no-color` behavior.
+3. Handle missing Linux files or commands with appropriate fallbacks.
+4. Keep system information collectors in `system_info.py`.
+5. Keep presentation logic in `pifetch.py`.
+6. Include clear descriptions of any new functionality.
+
+Before submitting a pull request, run a syntax check:
+
+```bash
+python3 -m py_compile pifetch.py config.py logo.py system_info.py
+```
 
 ## License
 
-No license is currently declared in this repository. Add a license file before distributing or reusing the project outside its intended context.
+No license is currently declared in this repository.
+
+A license file should be added before distributing or reusing the project outside its intended context.
 
 ## Acknowledgements
 
-Pifetch is part of the classic terminal “fetch” tradition: small utilities that turn system metadata into a useful and recognizable startup display.
+Pifetch is part of the classic terminal `fetch` tradition: small utilities that turn system metadata into a useful and recognizable startup display.
+
+Built for Raspberry Pi and Linux enthusiasts who appreciate a little more personality in their terminal.
